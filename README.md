@@ -15,6 +15,7 @@ Aplicación personal de finanzas e inversiones: registro de ingresos/gastos y se
 - **Finanzas personales**: registro de transacciones (ingreso/gasto) con categoría, descripción y fecha; resumen de balance; editar y eliminar.
 - **Inversiones**: plataformas dinámicas (ej. Interactive Broker, Binance) con color asignado automáticamente; movimientos (aporte/retiro) con monto en COP y USD registrados de forma independiente (sin conversión automática); % de participación por plataforma, años invertido, total global; editar y eliminar movimientos y plataformas (eliminar una plataforma borra en cascada sus movimientos).
 - **Tema**: modo claro/oscuro + selector de color primario (naranja/rojo/azul), persistidos en `localStorage`.
+- **PWA**: instalable desde el navegador (ícono en el menú de apps / pantalla de inicio). Sin soporte offline a propósito — solo instalabilidad, ya que la app depende de Supabase en vivo.
 
 ## Arquitectura
 
@@ -86,6 +87,25 @@ src/
 
 - **Unitarios (Vitest)**: cubren las capas `data/` puras — selectors (cálculos: balance, totales, % de inversión, años) y mappers (row de Supabase ↔ modelo de dominio). Viven junto al código que prueban (`*.test.ts`).
 - **End-to-end (Playwright)**: en `e2e/`, cubren los flujos completos por la UI (login con/sin contraseña, CRUD de transacciones e inversiones). No tocan Supabase real — mockean la API con `page.route()` (helpers en `e2e/helpers/mock-supabase.ts`), así que corren rápido y no dependen de datos ni de correo real.
+
+## PWA
+
+Configurada con [`vite-plugin-pwa`](https://vite-pwa-org.netlify.app/) (`vite.config.ts`), solo para instalabilidad — no cachea las llamadas a Supabase ni ofrece modo offline (la app no tendría datos que mostrar sin red de todas formas). El service worker **solo se activa en el build de producción**, nunca en `npm run dev`.
+
+- Ícono fuente (cuadrado, 850x850) en `public/logo-master.png`. Si el logo cambia, reemplazar ese archivo y regenerar el resto:
+  ```bash
+  cd public
+  sips -s format png -Z 192 logo-master.png --out pwa-192x192.png
+  sips -s format png -Z 512 logo-master.png --out pwa-512x512.png
+  sips -s format png -Z 180 logo-master.png --out apple-touch-icon.png
+  sips -s format png -Z 32 logo-master.png --out favicon-32x32.png
+
+  # Maskable: reduce el contenido ~74% y lo rellena de vuelta a 512x512 con el
+  # naranja del tema, para que sobreviva el recorte circular/squircle de Android.
+  sips -s format png -Z 379 logo-master.png --out /tmp/logo-small.png
+  sips -s format png -p 512 512 --padColor EA580C /tmp/logo-small.png --out pwa-maskable-512x512.png
+  ```
+- Para probar la instalación localmente: `npm run build && npm run preview`, abrir `http://localhost:4173` en Chrome y usar el ícono de instalar de la barra de direcciones (o "Agregar a pantalla de inicio" en el celular).
 
 ## Git hooks (Husky)
 
