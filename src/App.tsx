@@ -6,6 +6,7 @@ import { ProtectedRoute } from "@/features/auth/ui/protected-route";
 import { AuthenticatedLayout } from "@/features/auth/ui/authenticated-layout";
 import { SetPasswordPage } from "@/features/auth/ui/set-password-page";
 import { DashboardPage } from "@/features/transactions/ui/dashboard-page";
+import { InvestmentsPage } from "@/features/investments/ui/investments-page";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/set-password" element={<SetPasswordPage />} />
           <Route element={<AuthenticatedLayout />}>
             <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/investments" element={<InvestmentsPage />} />
           </Route>
         </Route>
         <Route path="*" element={<Navigate to="/dashboard" replace />} />

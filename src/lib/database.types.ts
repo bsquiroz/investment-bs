@@ -14,6 +14,71 @@ export type Database = {
   }
   public: {
     Tables: {
+      investment_movements: {
+        Row: {
+          amount_cop: number
+          amount_usd: number
+          created_at: string
+          id: string
+          occurred_at: string
+          platform_id: string
+          type: Database["public"]["Enums"]["investment_movement_type"]
+          user_id: string
+        }
+        Insert: {
+          amount_cop: number
+          amount_usd: number
+          created_at?: string
+          id?: string
+          occurred_at?: string
+          platform_id: string
+          type: Database["public"]["Enums"]["investment_movement_type"]
+          user_id: string
+        }
+        Update: {
+          amount_cop?: number
+          amount_usd?: number
+          created_at?: string
+          id?: string
+          occurred_at?: string
+          platform_id?: string
+          type?: Database["public"]["Enums"]["investment_movement_type"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "investment_movements_platform_id_fkey"
+            columns: ["platform_id"]
+            isOneToOne: false
+            referencedRelation: "investment_platforms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      investment_platforms: {
+        Row: {
+          color: string
+          created_at: string
+          id: string
+          name: string
+          user_id: string
+        }
+        Insert: {
+          color: string
+          created_at?: string
+          id?: string
+          name: string
+          user_id: string
+        }
+        Update: {
+          color?: string
+          created_at?: string
+          id?: string
+          name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       transactions: {
         Row: {
           amount: number
@@ -55,6 +120,7 @@ export type Database = {
       user_has_password: { Args: { user_email: string }; Returns: boolean }
     }
     Enums: {
+      investment_movement_type: "deposit" | "withdrawal"
       transaction_type: "income" | "expense"
     }
     CompositeTypes: {
@@ -183,6 +249,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      investment_movement_type: ["deposit", "withdrawal"],
       transaction_type: ["income", "expense"],
     },
   },

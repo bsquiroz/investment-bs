@@ -1,4 +1,4 @@
-import type { Tables, TablesInsert } from "@/lib/database.types";
+import type { Tables, TablesInsert, TablesUpdate } from "@/lib/database.types";
 import type { NewTransactionInput, Transaction } from "@/features/transactions/data/transactions.types";
 
 export function toTransaction(row: Tables<"transactions">): Transaction {
@@ -19,6 +19,16 @@ export function toInsertPayload(
 ): TablesInsert<"transactions"> {
   return {
     user_id: userId,
+    type: input.type,
+    amount: input.amount,
+    category: input.category || null,
+    description: input.description || null,
+    occurred_at: input.occurredAt,
+  };
+}
+
+export function toUpdatePayload(input: NewTransactionInput): TablesUpdate<"transactions"> {
+  return {
     type: input.type,
     amount: input.amount,
     category: input.category || null,

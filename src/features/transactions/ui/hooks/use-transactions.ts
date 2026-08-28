@@ -1,6 +1,15 @@
 import { useCallback, useEffect, useState } from "react";
-import { createTransaction, listTransactions } from "@/features/transactions/api/transactions.api";
-import { toInsertPayload, toTransaction } from "@/features/transactions/data/transactions.mappers";
+import {
+  createTransaction,
+  deleteTransaction,
+  listTransactions,
+  updateTransaction,
+} from "@/features/transactions/api/transactions.api";
+import {
+  toInsertPayload,
+  toTransaction,
+  toUpdatePayload,
+} from "@/features/transactions/data/transactions.mappers";
 import type { NewTransactionInput, Transaction } from "@/features/transactions/data/transactions.types";
 import { useSession } from "@/features/auth/ui/hooks/use-session";
 
@@ -36,5 +45,16 @@ export function useTransactions() {
     [user],
   );
 
-  return { transactions, loading, error, addTransaction };
+  const editTransaction = useCallback(async (id: string, input: NewTransactionInput) => {
+    const row = await updateTransaction(id, toUpdatePayload(input));
+    const updated = toTransaction(row);
+    setTransactions((prev) => prev.map((t) => (t.id === id ? updated : t)));
+  }, []);
+
+  const removeTransaction = useCallback(async (id: string) => {
+    await deleteTransaction(id);
+    setTransactions((prev) => prev.filter((t) => t.id !== id));
+  }, []);
+
+  return { transactions, loading, error, addTransaction, editTransaction, removeTransaction };
 }
