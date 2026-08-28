@@ -29,7 +29,7 @@ export function InvestmentsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <OverallTotalCard totals={overallTotals} />
         <PlatformDialog
           title="Nueva plataforma"
@@ -45,7 +45,8 @@ export function InvestmentsPage() {
 
       {platformSummaries.length === 0 ? (
         <p className="py-8 text-center text-sm text-muted-foreground">
-          Aún no tienes plataformas. Crea una para empezar a registrar tus inversiones.
+          Aún no tienes plataformas. Crea una para empezar a registrar tus
+          inversiones.
         </p>
       ) : (
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
