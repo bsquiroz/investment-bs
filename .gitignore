@@ -24,3 +24,9 @@ dist-ssr
 *.sw?
 
 .env
+
+# Test artifacts
+playwright-report/
+test-results/
+blob-report/
+coverage/

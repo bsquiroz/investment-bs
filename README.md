@@ -72,17 +72,34 @@ src/
 
 ## Scripts
 
-| Comando           | Descripción                                  |
-| ------------------ | --------------------------------------------- |
-| `npm run dev`     | Servidor de desarrollo (Vite)                |
-| `npm run build`   | Type-check (`tsc -b`) + build de producción  |
-| `npm run lint`    | Lint con oxlint                               |
-| `npm run preview` | Sirve el build de producción localmente       |
+| Comando            | Descripción                                          |
+| ------------------- | ------------------------------------------------------ |
+| `npm run dev`      | Servidor de desarrollo (Vite)                        |
+| `npm run build`    | Type-check (`tsc -b`) + build de producción          |
+| `npm run lint`     | Lint con oxlint                                       |
+| `npm run preview`  | Sirve el build de producción localmente               |
+| `npm test`         | Tests unitarios (Vitest) — `data/` de cada feature   |
+| `npm run test:watch` | Tests unitarios en modo watch                       |
+| `npm run e2e`      | Tests end-to-end (Playwright) — arranca `npm run dev` solo si no hay uno corriendo ya |
+
+## Tests
+
+- **Unitarios (Vitest)**: cubren las capas `data/` puras — selectors (cálculos: balance, totales, % de inversión, años) y mappers (row de Supabase ↔ modelo de dominio). Viven junto al código que prueban (`*.test.ts`).
+- **End-to-end (Playwright)**: en `e2e/`, cubren los flujos completos por la UI (login con/sin contraseña, CRUD de transacciones e inversiones). No tocan Supabase real — mockean la API con `page.route()` (helpers en `e2e/helpers/mock-supabase.ts`), así que corren rápido y no dependen de datos ni de correo real.
+
+## Git hooks (Husky)
+
+Se instalan solos al correr `npm install` (script `prepare`).
+
+- **pre-commit**: `npm run lint && tsc -b && npm test` — rápido, corre en cada commit local.
+- **pre-push**: `npm run e2e` — más lento (levanta la app), corre solo al hacer push.
+
+Si alguno falla, el commit/push se cancela y no queda nada a medias.
 
 ## Pendiente antes de producción
 
-- [ ] Desplegar (Vercel/Netlify) — el repo aún no tiene remoto configurado.
-- [ ] Actualizar Site URL / Redirect URLs de Supabase Auth con el dominio real.
+- [x] Desplegar — en Netlify (`https://investment-bs.netlify.app`), con `public/_redirects` para que las rutas de React Router no den 404 al recargar.
+- [ ] Actualizar Site URL / Redirect URLs de Supabase Auth con el dominio real (el Redirect URL ya se agregó; falta el Site URL, no bloqueante — ver por qué en el historial del proyecto).
 - [ ] Flujo de "¿Olvidaste tu contraseña?" (hoy no existe: si alguien pierde su contraseña, queda sin acceso).
 - [ ] Code-splitting por ruta (el bundle actual es un solo chunk de ~800KB).
 - [ ] Error Boundary a nivel de app.

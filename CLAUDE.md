@@ -16,7 +16,7 @@ Antes de crear una feature nueva, revisar `src/features/transactions/` e `src/fe
 - No agregar dependencias sin justificación. No duplicar lógica. Componentes pequeños. No modificar la arquitectura sin justificación.
 - La UI nunca accede a Supabase directamente ni crea otro cliente — reglas de RLS, migraciones y seguridad: docs/database.md.
 - Estilos y componentes: docs/DESIGN_SYSTEM.md.
-- No hay tests automatizados: verificar con Playwright headless mockeando Supabase (`page.route`), y correr `tsc -b` + `npm run lint` + `npm run build` antes de terminar una tarea.
+- Feature nueva o cambio en `data/`: agregar/actualizar tests con `npm test` (Vitest, para selectors/mappers puros) y `npm run e2e` (Playwright, mockeando Supabase con `page.route` — ver `e2e/helpers/mock-supabase.ts`). Antes de terminar una tarea: `npm test`, `npm run e2e`, `tsc -b`, `npm run lint` y `npm run build` sin errores nuevos.
 
 # Documentación
 
