@@ -1,40 +1,23 @@
-Proyecto
+# Proyecto
 
-Aplicación web construida con:
+App personal de finanzas e inversiones. React + Vite + TypeScript + Tailwind CSS + shadcn/ui (sobre Base UI, no Radix — prop `render` en vez de `asChild`) + Supabase.
 
-React + Vite
-TypeScript
-Tailwind CSS
-shadcn/ui
-Supabase
-Arquitectura
+Qué hace, cómo correrla y pendientes de producción: README.md.
 
-El proyecto utiliza una arquitectura orientada a Features.
+# Arquitectura
 
-Cada Feature se organiza en:
+Por Features: `ui/` (presentación), `data/` (tipos/mappers/selectors), `api/` (único lugar que importa `@/lib/supabase`). Detalle: docs/ARCHITECTURE.md.
 
-ui/ — presentación e interacción.
-data/ — modelos, tipos, estado y transformación de datos.
-api/ — acceso a Supabase y servicios externos.
+Antes de crear una feature nueva, revisar `src/features/transactions/` e `src/features/investments/` — ahí ya están resueltos los patrones de formularios crear/editar, borrado con confirmación, tablas con scroll, etc.
 
-La definición completa está en docs/ARCHITECTURE.md.
+# Reglas
 
-UI y estilos
-Usar Tailwind CSS para estilos.
-Usar shadcn/ui para componentes de interfaz.
-Reutilizar componentes existentes antes de crear nuevos.
-Seguir las reglas de docs/DESIGN_SYSTEM.md.
-Datos
-Supabase es el backend principal.
-La UI no debe acceder directamente a Supabase.
-Respetar las responsabilidades definidas en docs/ARCHITECTURE.md.
-Reglas de desarrollo
-Usar TypeScript.
-No agregar dependencias sin justificación.
-No duplicar lógica existente.
-Mantener los componentes pequeños y reutilizables.
-No modificar la arquitectura sin justificación.
-Revisar la estructura existente antes de crear nuevos archivos.
-Documentación
+- Reutilizar antes de crear: `src/lib/format.ts` (moneda/montos), `src/components/common/` (date-picker, confirm-delete-dialog, scrollable-table), `useSession()`.
+- No agregar dependencias sin justificación. No duplicar lógica. Componentes pequeños. No modificar la arquitectura sin justificación.
+- La UI nunca accede a Supabase directamente ni crea otro cliente — reglas de RLS, migraciones y seguridad: docs/database.md.
+- Estilos y componentes: docs/DESIGN_SYSTEM.md.
+- No hay tests automatizados: verificar con Playwright headless mockeando Supabase (`page.route`), y correr `tsc -b` + `npm run lint` + `npm run build` antes de terminar una tarea.
 
-Consultar los documentos de docs/ cuando la tarea requiera detalles de arquitectura, diseño, base de datos, API o funcionalidades.
+# Documentación
+
+docs/ARCHITECTURE.md · docs/database.md · docs/DESIGN_SYSTEM.md · README.md
